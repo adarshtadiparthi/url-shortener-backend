@@ -2,25 +2,40 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const userRepo = require("../repository/userRepository");
 
-const signup = async (email, password) => {
-  const existingUser = await userRepo.findByEmail(email);
-  if (existingUser) throw new Error("User already exists");
+const normalizeEmail = (e) => e.trim().toLowerCase();
+const signToken = (user) =>
+  jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-  return userRepo.createUser({ email, password: hashedPassword });
+const signup = async (email, password) => {
+  email = normalizeEmail(email);
+
+  const existing = await userRepo.findByEmail(email);
+  if (existing) throw new Error("User already exists");
+
+  const hashed = await bcrypt.hash(password, 10);
+  const user = await userRepo.createUser({ email, password: hashed });
+
+  const token = signToken(user);
+  return { user: user.toSafeJSON(), token };
 };
 
 const signin = async (email, password) => {
+  email = normalizeEmail(email);
+
   const user = await userRepo.findByEmail(email);
   if (!user) throw new Error("Invalid credentials");
 
-  const match = await bcrypt.compare(password, user.password);
-  if (!match) throw new Error("Invalid credentials");
+  const ok = await bcrypt.compare(password, user.password);
+  if (!ok) throw new Error("Invalid credentials");
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: "1d",
-  });
-  return { token };
+  const token = signToken(user);
+  return { user: user.toSafeJSON(), token };
 };
 
-module.exports = { signup, signin };
+const currentUser = async (id) => {
+  const user = await userRepo.findById(id);
+  if (!user) throw new Error("User not found");
+  return user.toSafeJSON();
+};
+
+module.exports = { signup, signin, currentUser };

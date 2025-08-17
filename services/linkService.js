@@ -1,13 +1,21 @@
-const shortid = require("shortid");
+const { nanoid } = require("nanoid");
 const linkRepo = require("../repository/linkRepository");
 
-const createShortLink = async (originalUrl, userId) => {
-  const shortCode = shortid.generate();
-  return linkRepo.createLink({ originalUrl, shortCode, userId });
+const createLink = async (userId, originalUrl) => {
+  const shortCode = nanoid(8); // generates short unique code
+  const link = await linkRepo.createLink({ originalUrl, shortCode, userId });
+  return { id: link._id, shortCode: link.shortCode, originalUrl: link.originalUrl };
 };
 
 const getUserLinks = async (userId) => {
-  return linkRepo.findByUserId(userId);
+  const links = await linkRepo.findByUser(userId);
+  return links.map(l => ({ id: l._id, shortCode: l.shortCode, originalUrl: l.originalUrl }));
 };
 
-module.exports = { createShortLink, getUserLinks };
+const resolveLink = async (shortCode) => {
+  const link = await linkRepo.findByShortCode(shortCode);
+  if (!link) throw new Error("Link not found");
+  return link.originalUrl;
+};
+
+module.exports = { createLink, getUserLinks, resolveLink };

@@ -1,7 +1,7 @@
 const Link = require("../persistence/models/Link");
 
 const createLink = (linkData) => Link.create(linkData);
-const findByUserId = (userId) => Link.find({ userId });
+const findByUser = (userId) => Link.find({ userId }).sort({ createdAt: -1 });
 const findByShortCode = (shortCode) => Link.findOne({ shortCode });
 
-module.exports = { createLink, findByUserId, findByShortCode };
+module.exports = { createLink, findByUser, findByShortCode };

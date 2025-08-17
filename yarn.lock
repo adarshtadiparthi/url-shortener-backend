@@ -1258,6 +1258,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nanoid@npm:^5.1.5":
+  version: 5.1.5
+  resolution: "nanoid@npm:5.1.5"
+  bin:
+    nanoid: bin/nanoid.js
+  checksum: 10c0/e6004f1ad6c7123eeb037062c4441d44982037dc043aabb162457ef6986e99964ba98c63c975f96c547403beb0bf95bc537bd7bf9a09baf381656acdc2975c3c
+  languageName: node
+  linkType: hard
+
 "negotiator@npm:^1.0.0":
   version: 1.0.0
   resolution: "negotiator@npm:1.0.0"
@@ -1889,6 +1898,7 @@ __metadata:
     express: "npm:^5.1.0"
     jsonwebtoken: "npm:^9.0.2"
     mongoose: "npm:^8.17.1"
+    nanoid: "npm:^5.1.5"
     nodemon: "npm:^3.1.10"
     shortid: "npm:^2.2.17"
   languageName: unknown
