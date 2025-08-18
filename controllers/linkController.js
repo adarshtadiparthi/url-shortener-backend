@@ -61,7 +61,7 @@ const getLinks = async (req, res) => {
 const redirect = async (req, res) => {
   try {
     const originalUrl = await linkService.resolveLink(req.params.code);
-    res.redirect(originalUrl);
+    res.json({ originalUrl });
   } catch {
     res.status(404).json({ error: "Short link not found" });
   }

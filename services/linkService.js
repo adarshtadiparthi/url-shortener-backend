@@ -9,7 +9,7 @@ const createLink = async (userId, originalUrl) => {
 
 const getUserLinks = async (userId) => {
   const links = await linkRepo.findByUser(userId);
-  return links.map(l => ({ id: l._id, shortCode: l.shortCode, originalUrl: l.originalUrl }));
+  return links.map(l => ({ id: l._id, shortCode: l.shortCode, originalUrl: l.originalUrl, createdAt : l.createdAt }));
 };
 
 const resolveLink = async (shortCode) => {
