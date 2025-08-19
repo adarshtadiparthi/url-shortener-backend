@@ -1,4 +1,7 @@
-const { nanoid } = require("nanoid");
+let nanoid;
+(async () => {
+  nanoid = (await import('nanoid')).nanoid;
+})();
 const linkRepo = require("../repository/linkRepository");
 
 const createLink = async (userId, originalUrl) => {
